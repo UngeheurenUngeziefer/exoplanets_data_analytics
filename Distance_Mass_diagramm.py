@@ -1,9 +1,5 @@
 import matplotlib.pyplot as plt
-import pandas as pd
-import matplotlib.cm as cm
-import numpy as np
 from Mass_research import confirmed_planets_table_with_mass
-import seaborn as sns
 
 # сделаем таблицу с заполненными значениями расстояния
 confirmed_planets_table_with_mass = confirmed_planets_table_with_mass.dropna()       # 937

@@ -1,9 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import numpy as np
-import scipy
-import random
 
 # открываем подготовленную базу экзопланет, универсальная кодировка, без имён столбцов
 list = pd.read_csv('exoplanet.eu_catalog.csv', encoding="Windows-1251", header=None)
@@ -50,24 +45,30 @@ confirmed_planets_table_with_mass = confirmed_planets_table_with_mass.loc[:, ['n
 confirmed_planets_table_with_mass = confirmed_planets_table_with_mass.sort_values(by=['mass_jup'])
 #print(confirmed_planets_table_with_mass)
 
-results_mass = confirmed_planets_table_with_mass.loc[:, ['name', 'mass_earth', 'mass_jup']]
-print()
-print('Самые крупные по массе экзопланеты: \n {}'
-      .format(results_mass.loc[:, ['name', 'mass_jup']]
-              .sort_values(by='mass_jup', ascending=False).head(5)))
-print()
-print('Самые мелкие по массе экзопланеты: \n {}'
-      .format(results_mass.loc[:, ['name', 'mass_earth']]
-              .sort_values(by='mass_earth', ascending=True).head(5)))
-print()
-results_mass_filtered = results_mass[
-    (results_mass['mass_earth'] < 1.3) &
-    (results_mass['mass_earth'] > 0.8)]
+def results_mass():
+    results_mass = confirmed_planets_table_with_mass.loc[:, ['name', 'mass_earth', 'mass_jup']]
+    print()
+    print('Самые крупные по массе экзопланеты: \n {}'
+          .format(results_mass.loc[:, ['name', 'mass_jup']]
+                  .sort_values(by='mass_jup', ascending=False).head(5)))
+    print()
+    print('Самые мелкие по массе экзопланеты: \n {}'
+          .format(results_mass.loc[:, ['name', 'mass_earth']]
+                  .sort_values(by='mass_earth', ascending=True).head(5)))
+    print()
+    results_mass_filtered = results_mass[
+        (results_mass['mass_earth'] < 1.3) &
+        (results_mass['mass_earth'] > 0.8)]
 
 
-print('Ближе всего к Земле по массе: \n {}'
-      .format(results_mass_filtered.loc[:, ['name', 'mass_earth']]
-              .sort_values(by='mass_earth', ascending=False)))
+    print('Ближе всего к Земле по массе: \n {}'
+          .format(results_mass_filtered.loc[:, ['name', 'mass_earth']]
+                  .sort_values(by='mass_earth', ascending=False)))
 
+    less_mass = results_mass[(results_mass['mass_earth'] < 1)]
+    more_mass = results_mass[(results_mass['mass_earth'] > 1)]
 
-
+    print()
+    print('Планет по массе крупнее Земли {}, меньше Земли {}\n'
+          .format(more_mass['mass_earth'].count(), less_mass['mass_earth'].count()))
+#results_mass()
