@@ -164,12 +164,13 @@ confirmed_planets_table = list[confirmed_planets]
 # print(confirmed_planets_table)
 
 # data = confirmed_planets_table['num_of_confirmed']
-#
-#
+
+
 # def func(pct, allvals):
 #     absolute = int(pct/100.*np.sum(allvals))
 #     return "{:.1f}%\n({:d})".format(pct, absolute)
 #
+# fig, ax = plt.subplots()
 # colors = ['red', 'sandybrown', 'turquoise', 'mediumpurple', 'green']
 # explode = (0.5, 0.3, 0.1, 0, 0)
 # wedges, texts, autotexts = ax.pie(data, autopct=lambda pct: func(pct, data),

@@ -66,6 +66,10 @@ class ParameterBasicInfo:
                             self.rus_name.lower(), obj_name, lesser_value_num))
 
         if bigger_value_num > lesser_value_num:
+            if bigger_value_num == 0:
+                bigger_value_num += 0.00001
+            elif lesser_value_num == 0:
+                lesser_value_num += 0.00001
             superiority = bigger_value_num / lesser_value_num
             string_answer = '\nЭкзопланет {} которых больше чем имеет {} в {:.2f} раз больше'\
                 .format(self.rus_name.lower(), obj_name, superiority)
@@ -89,4 +93,4 @@ def print_basic_info(prmtr, comparison_obj, comparison_prmtr):
     print(prmtr.obj_comparison(comparison_obj, comparison_prmtr))
 
 
-print_basic_info('radius', 'Юпитер', 1)
+print_basic_info('temp_measured', 'Земля', 273.15)

@@ -1,8 +1,14 @@
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 import numpy as np
 import pandas as pd
-import warnings; warnings.filterwarnings(action='once')
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib.cm as cm
 from Exoplanets_basic_info import list, columns, rus_columns
+from pywaffle import Waffle
 
 class Diagrams:
     def __init__(self, prmtr_name):
@@ -10,30 +16,52 @@ class Diagrams:
         self.column = list[self.name]
         index_of_prmtr_name = columns.index(prmtr_name)
         self.rus_name = rus_columns[index_of_prmtr_name]
-        self.conf_table = list[list['planet_status'] == 'Confirmed']
+        self.conf_table = list[list['planet_status'] == 'Confirmed'].copy()
         self.confirmed_planets_table_with_prmtr = self.conf_table.dropna(subset=[self.name])
 
+    def waffle(self):
 
-    def diverging_bars(self, column):
-        self.conf_table = list[list['planet_status'] == 'Confirmed']
+        waffle_plot_width = 16
+        waffle_plot_height = 9
+        classes = self.confirmed_planets_table_with_prmtr['name']
+        values = self.confirmed_planets_table_with_prmtr[self.name]
 
-        df = pd.read_csv("https://github.com/selva86/datasets/raw/master/mtcars.csv")
-        x = df.loc[:, ['mpg']]
-        df['mpg_z'] = (x - x.mean())/x.std()
-        df['colors'] = ['red' if x < 0 else 'green' for x in df['mpg_z']]
-        df.sort_values('mpg_z', inplace=True)
-        df.reset_index(inplace=True)
+        def waffle_plot(classes, values, height, width, colormap):
+            class_portion = [float(v) / sum(values) for v in values]
+            total_tiles = width * height
+            tiles_per_class = [round(p * total_tiles) for p in class_portion]
+            plot_matrix = np.zeros((height, width))
 
-        # Draw plot
-        plt.figure(figsize=(14,10), dpi= 80)
-        plt.hlines(y=df.index, xmin=0, xmax=df.mpg_z, color=df.colors, alpha=0.4, linewidth=5)
+            class_index = 0
+            tile_index = 0
 
-        # Decorations
-        plt.gca().set(ylabel='$Model$', xlabel='$Mileage$')
-        plt.yticks(df.index, df.cars, fontsize=12)
-        plt.title('Diverging Bars of Car Mileage', fontdict={'size':20})
-        plt.grid(linestyle='--', alpha=0.5)
+            for col in range(waffle_plot_width):
+                for row in range(height):
+                    tile_index += 1
+
+                    if tile_index > sum(tiles_per_class[0:class_index]):
+                        class_index += 1
+                    plot_matrix[row, col] = class_index
+
+            fig = plt.figure()
+            plt.matshow(plot_matrix, cmap=colormap)
+            plt.colorbar()
+            ax = plt.gca()
+            ax.set_xticks(np.arange(-.5, (width), 1), minor=True)
+            ax.set_yticks(np.arange(-.5, (height), 1), minor=True)
+            ax.grid(which='minor', color='w', linestyle='-', linewidth=2)
+            legend_handles = []
+            for i, c in enumerate(classes):
+                lable_str = c + " (" + str(values[i]) + ")"
+                color_val = colormap(float(i + 1) / len(classes))
+                legend_handles.append(mpatches.Patch(color=color_val, label=lable_str))
+
+            plt.legend(handles=legend_handles, loc=1, ncol=len(classes),
+                       bbox_to_anchor=(0., -0.1, 0.95, .10))
+            plt.xticks([])
+            plt.yticks([])
+
+        waffle_plot(classes, values, waffle_plot_height, waffle_plot_width, plt.cm.coolwarm)
         plt.show()
 
-prmtr = Diagrams('lambda_angle')
-print(prmtr.diverging_bars('lambda_angle'))
+print(Diagrams('log_g').waffle())
