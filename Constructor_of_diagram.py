@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from pywaffle import Waffle
 import warnings; warnings.filterwarnings(action='once')
 from Exoplanets_basic_info import list, columns, rus_columns
 
@@ -101,15 +102,57 @@ class Diagrams:
                       jitter=0.25, size=8, ax=ax, linewidth=.5)
         plt.title(title, fontsize=22)
         plt.xlabel(self.rus_name)
+        plt.xticks(rotation=90)
         plt.ylabel(rus_columns[columns.index(yprmtr)])
         plt.show()
 
+    def waffle(self, title, rows):
 
+        df = self.conf_table.groupby(self.name).size().reset_index(name='counts')
+        n_categories = df.shape[0]
+        colors = [plt.cm.inferno_r(i / float(n_categories)) for i in range(n_categories)]
 
-prmtr = Diagrams('lambda_angle')
-# print(prmtr.bubbles_prmtr_by_prmtr('соотношение', 'discovered'))
-# print(prmtr.ratio_with_labels_horizontal('Количество открытых в год',
-#                                        'forestgreen', 'discovered', 'scatter'))
-# print(prmtr.diverging_bars('Разница в лямбда углах планет'))
-# print(prmtr.pie('Название таблицы'))
-print(prmtr.stripplot('star_distance', 'Название таблицы'))
+        plt.figure(
+            FigureClass=Waffle,
+            plots={
+                '111': {
+                    'values': df['counts'],
+                    'labels': ["{} ({:.2f})".format(n[0], n[1]) for n in df[[self.name, 'counts']].itertuples()],
+                    'legend': {'loc': 'upper center', 'bbox_to_anchor': (0.5, -0.02), 'fancybox': True,
+                               'ncol': n_categories // rows // 2, 'fontsize': 12},
+                    'title': {'label': title, 'loc': 'center', 'fontsize': 18}
+                },
+            },
+            rows=rows,
+            colors=colors,
+            figsize=(16, 9)
+        )
+        plt.show()
+
+    def angles_polar(self, title):
+        # берём все углы подтверждённых экзопланет с непустыми значениями угла
+        # создаём список списков углов, делаем из него список углов
+        series_all_angles = self.confirmed_planets_table_with_prmtr.loc[:, [self.name]]
+        list_of_lists_angles = series_all_angles.values.tolist()
+        flat_list = []
+        for sublist in list_of_lists_angles:
+            for item in sublist:
+                flat_list.append(item)
+
+        theta = np.radians(np.array(flat_list))
+        radius = np.ones(theta.size)  # радиусы одинакового размера
+        ax = plt.subplot(111, polar=True)
+        ax.set_yticklabels([])  # убрать radial ticks
+        for t, r in zip(theta, radius):
+            ax.plot((0, t), (0, r))
+        ax.set_title(title)
+        plt.show()
+
+# print(Diagrams('orbital_period').bubbles_prmtr_by_prmtr('Соотношение орбитального периода к массе планеты', 'mass_jup'))
+# print(Diagrams('radius').ratio_with_labels_horizontal('Соотношение орбитального периода и массы экзопланеты', 'forestgreen', 'orbital_period', 'bar'))
+# print(Diagrams('orbital_period').diverging_bars('Орбитальный период экзопланет (в днях)'))
+print(Diagrams('orbital_period').stripplot('name', 'Соотношение орбитального периода и массы экзопланеты'))
+# print(Diagrams('radius').waffle('Радиус экзопланет', 50))
+# print(Diagrams('mass_jup').pie('Экзопланеты по массе'))
+# print(Diagrams('mass_jup').angles_polar('Склонение'))
+

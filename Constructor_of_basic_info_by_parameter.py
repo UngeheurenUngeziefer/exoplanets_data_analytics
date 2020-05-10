@@ -86,11 +86,14 @@ class ParameterBasicInfo:
 
 def print_basic_info(prmtr, comparison_obj, comparison_prmtr):
     prmtr = ParameterBasicInfo(prmtr)
-    print(prmtr.empty_fields_num())
-    print(prmtr.confirmed_planets())
-    print(prmtr.biggest_prmtr())
-    print(prmtr.lowest_prmtr())
-    print(prmtr.obj_comparison(comparison_obj, comparison_prmtr))
+    print(prmtr.empty_fields_num(), file=open("output.txt", "a"))
+    print(prmtr.confirmed_planets(), file=open("output.txt", "a"))
+    print(prmtr.biggest_prmtr(), file=open("output.txt", "a"))
+    print(prmtr.lowest_prmtr(), file=open("output.txt", "a"))
+    print(prmtr.obj_comparison(comparison_obj, comparison_prmtr), file=open("output.txt", "a"))
 
 
-print_basic_info('temp_measured', 'Земля', 273.15)
+
+
+print_basic_info('orbital_period', 'Земля', 365.256)
+
