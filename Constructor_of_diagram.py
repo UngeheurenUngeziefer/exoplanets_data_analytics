@@ -20,13 +20,26 @@ class Diagrams:
         self.conf_table = self.conf_table.dropna(subset=[second_prmtr, self.name])
         first_prmtr_column = self.confirmed_planets_table_with_prmtr[second_prmtr]
         second_prmtr_column = self.confirmed_planets_table_with_prmtr[self.name]
-        plt.scatter(second_prmtr_column, first_prmtr_column, s=first_prmtr_column,
+        plt.scatter(second_prmtr_column, first_prmtr_column, s=first_prmtr_column / 2,
                     c=first_prmtr_column, alpha=0.5)
         sec_index = columns.index(second_prmtr)
         plt.xlabel('{}'.format(self.rus_name))
+        plt.xticks(rotation=75)
         plt.ylabel('{}'.format(rus_columns[sec_index]))
         plt.title('{}'.format(title))
-        plt.colorbar()
+        plt.cool()
+        plt.show()
+
+    def bars_prmtr_by_prmtr(self, title, second_prmtr):
+        self.conf_table = self.conf_table.dropna(subset=[second_prmtr, self.name])
+        first_prmtr_column = self.confirmed_planets_table_with_prmtr[second_prmtr]
+        second_prmtr_column = self.confirmed_planets_table_with_prmtr[self.name]
+        plt.bar(second_prmtr_column, first_prmtr_column)
+        sec_index = columns.index(second_prmtr)
+        plt.xlabel('{}'.format(self.rus_name))
+        plt.xticks(rotation=90)
+        plt.ylabel('{}'.format(rus_columns[sec_index]))
+        plt.title('{}'.format(title))
         plt.show()
 
     def ratio_with_labels_horizontal(self, title, color, xprmtr, dtype):
@@ -148,11 +161,10 @@ class Diagrams:
         ax.set_title(title)
         plt.show()
 
-# print(Diagrams('orbital_period').bubbles_prmtr_by_prmtr('Соотношение орбитального периода к массе планеты', 'mass_jup'))
-# print(Diagrams('radius').ratio_with_labels_horizontal('Соотношение орбитального периода и массы экзопланеты', 'forestgreen', 'orbital_period', 'bar'))
-# print(Diagrams('orbital_period').diverging_bars('Орбитальный период экзопланет (в днях)'))
-print(Diagrams('orbital_period').stripplot('name', 'Соотношение орбитального периода и массы экзопланеты'))
-# print(Diagrams('radius').waffle('Радиус экзопланет', 50))
-# print(Diagrams('mass_jup').pie('Экзопланеты по массе'))
-# print(Diagrams('mass_jup').angles_polar('Склонение'))
-
+# print(Diagrams('discovered').bubbles_prmtr_by_prmtr('Отношение массы планеты к году открытия', 'mass_jup'))
+# print(Diagrams('orbital_period').ratio_with_labels_horizontal('Орбитальный период экзопланет', 'blue', 'name', 'bar'))
+# print(Diagrams('semi_major_axis').diverging_bars('Большая полуось'))
+# print(Diagrams('discovered').stripplot('name', 'Открытие экзопланет'))
+# print(Diagrams('discovered').waffle('Открытие экзопланет', 10))
+# print(Diagrams('orbital_period').pie('Орбитальный период экзопланет'))
+print(Diagrams('lambda_angle').angles_polar('Распределение углов лямбда экзопланет'))

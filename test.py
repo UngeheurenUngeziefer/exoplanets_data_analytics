@@ -1,15 +1,17 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from Exoplanets_basic_info import list, columns, rus_columns
 
-class Diagrams:
-    def __init__(self, prmtr_name):
-        self.name = prmtr_name
-        self.column = list[self.name]
-        index_of_prmtr_name = columns.index(prmtr_name)
-        self.rus_name = rus_columns[index_of_prmtr_name]
-        self.conf_table = list[list['planet_status'] == 'Confirmed'].copy()
-        self.confirmed_planets_table_with_prmtr = self.conf_table.dropna(subset=[self.name])
+from Exoplanets_basic_info import list
 
 
+list = list.groupby('discovered').count()
+list.reset_index(level=0, inplace=True)
+print(list)
 
+x = list['discovered']
+y = list['name']
+plt.bar(x, y, color='darkgray')
+plt.xticks(x, rotation=75)
+plt.xlabel('Год')
+plt.ylabel('Количество открытых планет')
+plt.title('Открытие экзопланет по годам')
+plt.show()

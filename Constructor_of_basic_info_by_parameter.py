@@ -95,5 +95,4 @@ def print_basic_info(prmtr, comparison_obj, comparison_prmtr):
 
 
 
-print_basic_info('orbital_period', 'Земля', 365.256)
-
+print_basic_info('lambda_angle', 'Земля', 0)
