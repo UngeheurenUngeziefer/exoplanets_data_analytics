@@ -20,14 +20,14 @@ class Diagrams:
         self.conf_table = self.conf_table.dropna(subset=[second_prmtr, self.name])
         first_prmtr_column = self.confirmed_planets_table_with_prmtr[second_prmtr]
         second_prmtr_column = self.confirmed_planets_table_with_prmtr[self.name]
-        plt.scatter(second_prmtr_column, first_prmtr_column, s=first_prmtr_column / 2,
+        plt.scatter(second_prmtr_column, first_prmtr_column, s=first_prmtr_column * 30,
                     c=first_prmtr_column, alpha=0.5)
         sec_index = columns.index(second_prmtr)
         plt.xlabel('{}'.format(self.rus_name))
         plt.xticks(rotation=75)
         plt.ylabel('{}'.format(rus_columns[sec_index]))
         plt.title('{}'.format(title))
-        plt.cool()
+        plt.viridis()
         plt.show()
 
     def bars_prmtr_by_prmtr(self, title, second_prmtr):
@@ -70,7 +70,7 @@ class Diagrams:
 
     def diverging_bars(self, title):
         x = list[list['planet_status'] == 'Confirmed'].loc[:, [self.name, 'name']].dropna(subset=[self.name])
-        x['column_z'] = (x.loc[:, [self.name]] - x.loc[:, [self.name]].mean()) / x.loc[:, [self.name]].std()
+        x['column_z'] = (x.loc[:, [self.name]] - x.loc[:, [self.name]].mean()) / x.loc[:, [self.name]].std() - 0.25
         # x['column_z'] = x.loc[:, [self.name]]
         x['colors'] = ['red' if x < 0 else 'green' for x in x['column_z']]
         x.sort_values('column_z', inplace=True)
@@ -91,31 +91,29 @@ class Diagrams:
         self.conf_table = self.conf_table.drop_duplicates(subset=[self.name]).dropna(subset=['counter'])
         self.conf_table = self.conf_table.sort_values(by=[self.name])
 
-        fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-        data = self.conf_table['counter']
-        name_of_prmtr = self.conf_table[self.name]
-
-        def func(pct, allvals):
-            absolute = int(pct / 100. * np.sum(allvals))
-            return "{:.1f}%\n({})".format(pct, absolute)
-
-        wedges, texts, autotexts = ax.pie(data, autopct=lambda pct: func(pct, data),
-                                          textprops=dict(color="w"))
-        ax.legend(wedges, name_of_prmtr, title='Легенда',
-                  loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-        plt.setp(autotexts, size=8, weight="light")
+        fig = plt.figure(4, figsize=(3, 3))
+        ax = fig.add_subplot(211)
+        total = self.conf_table['counter']
+        labels = self.conf_table[self.name]
         ax.set_title(title)
+        ax.axis("equal")
+        pie = ax.pie(total, startangle=0)
+        ax2 = fig.add_subplot(212)
+        ax2.axis("off")
+        ax2.legend(pie[0], labels, loc="center")
+
+
         plt.show()
 
     def stripplot(self, yprmtr, title):
         self.conf_table = self.conf_table.dropna(subset=[self.name, yprmtr])
-
+        self.conf_table = self.conf_table.sort_values(by=self.name, ascending=True)
         fig, ax = plt.subplots(figsize=(16, 10), dpi=80)
         sns.stripplot(self.conf_table[self.name], self.conf_table[yprmtr],
-                      jitter=0.25, size=8, ax=ax, linewidth=.5)
+                      jitter=0, size=10, ax=ax, linewidth=.5, palette='Greens')
         plt.title(title, fontsize=22)
         plt.xlabel(self.rus_name)
-        plt.xticks(rotation=90)
+        plt.xticks(rotation=75)
         plt.ylabel(rus_columns[columns.index(yprmtr)])
         plt.show()
 
@@ -123,7 +121,7 @@ class Diagrams:
 
         df = self.conf_table.groupby(self.name).size().reset_index(name='counts')
         n_categories = df.shape[0]
-        colors = [plt.cm.inferno_r(i / float(n_categories)) for i in range(n_categories)]
+        colors = [plt.cm.magma(i / float(n_categories)) for i in range(n_categories)]
 
         plt.figure(
             FigureClass=Waffle,
@@ -161,10 +159,10 @@ class Diagrams:
         ax.set_title(title)
         plt.show()
 
-# print(Diagrams('discovered').bubbles_prmtr_by_prmtr('Отношение массы планеты к году открытия', 'mass_jup'))
-# print(Diagrams('orbital_period').ratio_with_labels_horizontal('Орбитальный период экзопланет', 'blue', 'name', 'bar'))
-# print(Diagrams('semi_major_axis').diverging_bars('Большая полуось'))
-# print(Diagrams('discovered').stripplot('name', 'Открытие экзопланет'))
-# print(Diagrams('discovered').waffle('Открытие экзопланет', 10))
-# print(Diagrams('orbital_period').pie('Орбитальный период экзопланет'))
-print(Diagrams('lambda_angle').angles_polar('Распределение углов лямбда экзопланет'))
+print(Diagrams('star_distance').bubbles_prmtr_by_prmtr('Зависимость возраста звезды от расстояния до неё', 'star_age'))
+# print(Diagrams('log_g').ratio_with_labels_horizontal('Поверхностная гравитация', 'red', 'mass_jup', 'bar'))
+# print(Diagrams('star_age').diverging_bars('Геометрическое альбедо'))
+# print(Diagrams('log_g').stripplot('mass_jup', 'Зависимость поверхностной гравитации от массы экзопланет'))
+# print(Diagrams('geometric_albedo').waffle('Геометрическое альбедо', 2))
+# print(Diagrams('star_spectral_type').pie('Спектральный тип звёзд с экзопланетами'))
+# print(Diagrams('lambda_angle').angles_polar('Распределение углов лямбда экзопланет'))

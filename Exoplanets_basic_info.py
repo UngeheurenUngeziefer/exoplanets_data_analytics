@@ -16,7 +16,7 @@ columns = ['name', 'planet_status', 'mass_jup', 'radius', 'orbital_period',	'sem
            'inclination', 'angular_distance', 'discovered', 'updated', 'omega', 'epoch_of_periastron',
            'conjonction_date', 'primary_transit', 'secondary_transit', 'lambda_angle', 'impact_parameter',
            'velocity_semiamplitude', 'temp_calculated', 'temp_measured', 'hot_point_lon', 'geometric_albedo',
-           'log_g', 'publication', 'detection_type', 'mass_detection_type', 'radius_detection_type', 'alternate_names',
+           'log_g', 'publication', 'detection_type', 'mass_meas_type', 'radius_meas_type', 'alternate_names',
            'molecules',	'star_name', 'right_ascention', 'declination', 'mag_v',	'mag_i', 'mag_j', 'mag_h', 'mag_k',
            'star_distance', 'star_metallicity', 'star_mass', 'star_radius', 'star_spectral_type', 'star_age',
            'star_effective_temp', 'star_detected_disc', 'star_magnetic_field', 'star_alternate_names']

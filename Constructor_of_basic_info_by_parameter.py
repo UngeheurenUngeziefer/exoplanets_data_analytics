@@ -95,4 +95,4 @@ def print_basic_info(prmtr, comparison_obj, comparison_prmtr):
 
 
 
-print_basic_info('lambda_angle', 'Земля', 0)
+print_basic_info('star_age', 'Солнце', 4.6)
