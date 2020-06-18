@@ -95,4 +95,4 @@ def print_basic_info(prmtr, comparison_obj, comparison_prmtr):
 
 
 
-print_basic_info('star_age', 'Солнце', 4.6)
+print_basic_info('radius', 'Земля', 1)
